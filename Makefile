@@ -14,7 +14,23 @@ EXTRA_CFLAGS += -Wno-unused-variable
 #EXTRA_CFLAGS += -Wno-unused-function
 #EXTRA_CFLAGS += -Wno-unused
 #EXTRA_CFLAGS += -Wno-uninitialized
-EXTRA_CFLAGS += -Wimplicit-fallthrough=3
+#EXTRA_CFLAGS += -Wno-vla
+EXTRA_CFLAGS += -Wno-misleading-indentation
+EXTRA_CFLAGS += -Wno-implicit-fallthrough
+#EXTRA_CFLAGS += -Wno-return-type
+#EXTRA_CFLAGS += -Wno-discarded-qualifiers
+
+# Activates Concurrent Mode if uncommented
+#EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+
+# LED Control
+EXTRA_CFLAGS += -DCONFIG_LED_CONTROL
+EXTRA_CFLAGS += -DCONFIG_SW_LED -DCONFIG_RTW_SW_LED
+EXTRA_CFLAGS += -DCONFIG_LED_ENABLE
+
+# gcc-12
+EXTRA_CFLAGS += -Wno-address
+EXTRA_CFLAGS += -Wframe-larger-than=1648
 
 GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
 ifeq ($(GCC_VER_49),1)
@@ -79,7 +95,7 @@ CONFIG_SIGNAL_SCALE_MAPPING = n
 CONFIG_80211W = y
 CONFIG_REDUCE_TX_CPU_LOADING = n
 CONFIG_BR_EXT = y
-CONFIG_TDLS = n
+CONFIG_TDLS = y
 CONFIG_WIFI_MONITOR = y
 CONFIG_MCC_MODE = n
 CONFIG_APPEND_VENDOR_IE_ENABLE = n
@@ -110,12 +126,12 @@ CONFIG_RTW_DEBUG = n
 CONFIG_RTW_LOG_LEVEL = 0
 
 # enable /proc/net/rtlxxxx/ debug interfaces
-CONFIG_PROC_DEBUG = y
+CONFIG_PROC_DEBUG = n
 
 ######################## Wake On Lan ##########################
 CONFIG_WOWLAN = n
 #bit3: ARP enable, bit2: deauth, bit1: unicast, bit0: magic pkt.
-CONFIG_WAKEUP_TYPE = 0xf
+CONFIG_WAKEUP_TYPE = 0x7
 CONFIG_WOW_LPS_MODE = default
 #bit0: disBBRF off, #bit1: Wireless remote controller (WRC)
 CONFIG_SUSPEND_TYPE = 0
@@ -302,8 +318,8 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8188E
 
 _HAL_INTFS_FILES +=	hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8188EPwrSeq.o\
- 					hal/$(RTL871X)/$(RTL871X)_xmit.o\
+					hal/$(RTL871X)/Hal8188EPwrSeq.o \
+					hal/$(RTL871X)/$(RTL871X)_xmit.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -358,8 +374,8 @@ MODULE_NAME = 8192ee
 endif
 EXTRA_CFLAGS += -DCONFIG_RTL8192E
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8192EPwrSeq.o\
-					hal/$(RTL871X)/$(RTL871X)_xmit.o\
+					hal/$(RTL871X)/Hal8192EPwrSeq.o \
+					hal/$(RTL871X)/$(RTL871X)_xmit.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -418,8 +434,8 @@ endif
 
 _HAL_INTFS_FILES +=  hal/HalPwrSeqCmd.o \
 					hal/$(RTL871X)/Hal8812PwrSeq.o \
-					hal/$(RTL871X)/Hal8821APwrSeq.o\
-					hal/$(RTL871X)/$(RTL871X)_xmit.o\
+					hal/$(RTL871X)/Hal8821APwrSeq.o \
+					hal/$(RTL871X)/$(RTL871X)_xmit.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -525,7 +541,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8723B
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8723BPwrSeq.o\
+					hal/$(RTL871X)/Hal8723BPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -587,7 +603,7 @@ EXTRA_CFLAGS += -DCONFIG_RTL8814A
 
 _HAL_INTFS_FILES +=  hal/HalPwrSeqCmd.o \
 					hal/$(RTL871X)/Hal8814PwrSeq.o \
-					hal/$(RTL871X)/$(RTL871X)_xmit.o\
+					hal/$(RTL871X)/$(RTL871X)_xmit.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -647,7 +663,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8703B
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8703BPwrSeq.o\
+					hal/$(RTL871X)/Hal8703BPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -703,7 +719,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8723D
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8723DPwrSeq.o\
+					hal/$(RTL871X)/Hal8723DPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -771,7 +787,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8188F
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8188FPwrSeq.o\
+					hal/$(RTL871X)/Hal8188FPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -818,7 +834,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8188GTV
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8188GTVPwrSeq.o\
+					hal/$(RTL871X)/Hal8188GTVPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -896,7 +912,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8710B
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8710BPwrSeq.o\
+					hal/$(RTL871X)/Hal8710BPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -943,7 +959,7 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8192F
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8192FPwrSeq.o\
+					hal/$(RTL871X)/Hal8192FPwrSeq.o \
 					hal/$(RTL871X)/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
@@ -2507,6 +2523,13 @@ install:
 uninstall:
 	rm -f $(MODDESTDIR)/$(MODULE_NAME).ko
 	/sbin/depmod -a ${KVER}
+
+sign:
+	@openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj "/CN=Custom MOK/"
+	@mokutil --import MOK.der
+	@$(KSRC)/scripts/sign-file sha256 MOK.priv MOK.der 8821cu.ko
+
+sign-install: all sign install
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"

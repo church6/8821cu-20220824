@@ -57,9 +57,9 @@ cp -f ${OPTIONS_FILE} /etc/modprobe.d
 echo "Copying ${BLACKLIST_FILE} to: /etc/modprobe.d"
 cp -f ${BLACKLIST_FILE} /etc/modprobe.d
 
-make clean
+#make clean
 
-make
+#make
 RESULT=$?
 
 if [[ "$RESULT" != "0" ]]
@@ -104,7 +104,8 @@ then
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		reboot
+	   echo "reboot"
+		#reboot
 	fi
 fi
 

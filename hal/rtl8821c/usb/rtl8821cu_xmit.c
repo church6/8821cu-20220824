@@ -314,6 +314,7 @@ static s32 update_txdesc(struct xmit_frame *pxmitframe, u8 *pmem, s32 sz, u8 bag
 			if (pattrib->retry_ctrl == _TRUE)
 				SET_TX_DESC_RTS_DATA_RTY_LMT_8821C(ptxdesc, 6);
 			else
+/* nrm */
 				SET_TX_DESC_RTS_DATA_RTY_LMT_8821C(ptxdesc, 0);
 		}
 
@@ -899,7 +900,7 @@ static s32 rtl8821cu_xmitframe_complete(PADAPTER padapter, struct xmit_priv *pxm
 }
 #endif
 
-static void rtl8821cu_xmit_tasklet(void *priv)
+static void rtl8821cu_xmit_tasklet(unsigned long priv)
 {
 	int ret = _FALSE;
 	_adapter *padapter = (_adapter *)priv;
@@ -931,7 +932,11 @@ s32	rtl8821cu_init_xmit_priv(PADAPTER padapter)
 
 #ifdef PLATFORM_LINUX
 	tasklet_init(&pxmitpriv->xmit_tasklet,
-		     (void(*))rtl8821cu_xmit_tasklet,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0))
+		     (void(*)(unsigned long))rtl8821cu_xmit_tasklet,
+#else
+		     (void *)rtl8821cu_xmit_tasklet,
+#endif
 		     (unsigned long)padapter);
 #endif
 #ifdef CONFIG_TX_EARLY_MODE
