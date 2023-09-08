@@ -30,7 +30,7 @@
 SCRIPT_NAME="remove-driver.sh"
 SCRIPT_VERSION="20230226"
 MODULE_NAME="8821cu"
-DRV_VERSION="5.12.0.4"
+DRV_VERSION="6.2.0-32"
 
 KARCH="$(uname -m)"
 KVER="$(uname -r)"
